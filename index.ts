@@ -129,7 +129,7 @@ app.get('/start', async (req, res) => {
     if (!intervalId) {
         if (stencilPixelData === null) {
             try {
-                stencilPixelData = await getStencilPixelData("00f6cbdf6ab734bde0025b4ccada5888ec04bcbad0d6898fe252d5d7c5ca13b6");
+                stencilPixelData = await getStencilPixelData(process.env.HASH || "");
             } catch (error) {
                 console.log('Failed to fetch stencil pixel data.');
             }
