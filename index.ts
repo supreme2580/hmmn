@@ -134,7 +134,7 @@ app.get('/start', async (req, res) => {
                 console.log('Failed to fetch stencil pixel data.');
             }
         }
-        const canvas_id = process.env.CANVAS_ID;
+        const canvas_id = Number(process.env.CANVAS_ID) || 13
         const totalPixels = stencilPixelData?.data?.width * stencilPixelData?.data?.height || 0;
         const defaultColor = [255, 255, 255, 255]; // Fallback color (white with full opacity)
 
