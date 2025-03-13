@@ -10,7 +10,7 @@ const contract_address = process.env.CONTRACT_ADDRESS || "";
 const private_key = process.env.PRIVATE_KEY || "";
 const public_key = process.env.PUBLIC_KEY || "";
 const provider = new RpcProvider({
-    nodeUrl: constants.NetworkName.SN_MAIN,
+    nodeUrl: "https://starknet-mainnet.public.blastapi.io",
 });
 const { abi } = await provider.getClassAt(contract_address);
 const contract = new Contract(abi, contract_address, provider);
