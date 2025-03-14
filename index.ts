@@ -167,6 +167,8 @@ app.get('/stop', (req, res) => {
     }
 });
 
+// ... existing code ...
+
 async function startServer() {
     let port = 3000;
     const availablePort = await detect(port);
@@ -176,8 +178,38 @@ async function startServer() {
         port = availablePort;
     }
 
-    app.listen(port, () => {
+    app.listen(port, async () => {
         console.log(`Server is running at http://localhost:${port}`);
+
+        // Automatically start the logging process
+        if (!intervalId) {
+            if (stencilPixelData === null) {
+                try {
+                    stencilPixelData = await getStencilPixelData(process.env.HASH || "");
+                } catch (error) {
+                    console.log('Failed to fetch stencil pixel data.');
+                }
+            }
+            const canvas_id = Number(process.env.CANVAS_ID) || 13;
+            const totalPixels = stencilPixelData?.data?.width * stencilPixelData?.data?.height || 0;
+            const defaultColor = [255, 255, 255, 255]; // Fallback color (white with full opacity)
+
+            const pixelColors = Array.from({ length: 5 }, () => {
+                if (totalPixels > 0) {
+                    const pixelIndex = getRandomInt(0, totalPixels - 1);
+                    const colorStartIndex = pixelIndex * 4;
+                    if (colorStartIndex + 4 <= stencilPixelData.data.pixelData.length) {
+                        return stencilPixelData.data.pixelData.slice(colorStartIndex, colorStartIndex + 4);
+                    }
+                }
+                return defaultColor; // Use fallback color if out of bounds or no data
+            }).flat();
+
+            startContractCallInterval(canvas_id, positions, pixelColors);
+            console.log('Started logging every five seconds.');
+        } else {
+            console.log('Already logging.');
+        }
     });
 }
 
