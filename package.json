@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "detect-port": "^2.1.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "starknet": "^6.23.1"

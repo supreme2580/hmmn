@@ -1,11 +1,11 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { Account, AccountInterface, constants, Contract, RpcProvider } from 'starknet';
+import { detect } from 'detect-port';
 
 dotenv.config();
 
 const app = express();
-const port = 3000;
 const contract_address = process.env.CONTRACT_ADDRESS || "";
 const private_key = process.env.PRIVATE_KEY || "";
 const public_key = process.env.PUBLIC_KEY || "";
@@ -167,7 +167,18 @@ app.get('/stop', (req, res) => {
     }
 });
 
-// Start the server
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
-});
+async function startServer() {
+    let port = 3000;
+    const availablePort = await detect(port);
+
+    if (port !== availablePort) {
+        console.log(`Port ${port} is in use, switching to port ${availablePort}`);
+        port = availablePort;
+    }
+
+    app.listen(port, () => {
+        console.log(`Server is running at http://localhost:${port}`);
+    });
+}
+
+startServer();
